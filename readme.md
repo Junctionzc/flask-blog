@@ -1,6 +1,205 @@
 # Flask入门学习笔记
 **配合《Flask Web开发：基于Python的Web应用开发实战》学习**
 
+## **部署**
+书本第17章部署到Heroku平台上，我并没有按照书本的来，而是部署到了DigitalOcean上，基本上是参考了这里：https://realpython.com/blog/python/kickstarting-flask-on-ubuntu-setup-and-deployment/ ，但细节上有些更改，这篇博文里有些问题，也可能是我打开方式不对，它配置的虚拟环境没有用，安装的所有依赖全部装到系统的lib中去了，虽然也可以，但感觉还是分开吧。经过多次实践，以下是我的完整部署过程（已测试过两次）：
+
+刚开始不明白这个nginx有什么用，看了上面的链接的部署过程大概明白了，将外部的请求转发到内部的gunicorn服务器，称为反向代理(Apache)，一图说明一切：
+![](localhost.jpg)
+
+### **准备工作**
+
+域名：狗爹上面购买：https://sg.godaddy.com/zh/ ，有点小贵，然后设置DNS指向主机ip就ok。
+    
+主机：DigitalOcean：https://www.digitalocean.com/ ，因为是测试用，所以选了最便宜的5美刀一个月，貌似第一次注册送10美刀。主机安装ubuntu-14.04.4 x64，购买主机后会将root密码发送到注册账号时填写的邮箱，使用ssh登录即可（我用xshell），第一次登录需要重新设置root密码。
+
+### **部署过程**
+
+部署的思路不太复杂：nginx反向代理 + MySQL数据库 + gunicorn flask生产服务器 + supervisor守护（这个用来自动启动gunicorn），只是有些具体细节的地方需要注意。
+
+**新建用户**
+使用ssh以root登录主机之后先新建一个非管理员用户
+```
+# 创建新用户，名字可个人喜好，我这里为junction
+$ useradd junction -m -s /bin/bash
+
+# 设置新用户密码
+$ passwd junction
+
+# 为新用户添加sudo
+$ adduser junction sudo
+
+# 切换到新的用户
+$ su junction
+```
+
+**安装相关依赖及工具**
+```
+$ sudo apt-get update
+$ sudo apt-get install -y python python-pip python-virtualenv python-dev nginx git
+```
+
+**创建新的目录保存工程**
+
+**(重要)**还要设置目录所属用户和用户组为当前用户
+```
+$ sudo mkdir /home/www && cd /home
+$ sudo chown -R junction:junction www && cd www
+```
+
+**下载源码（以下为我提供的一个示例）**
+```
+$ git clone https://github.com/Junctionzc/Flask-Blog.git && cd Flask-Blog 
+```
+
+**创建虚拟环境**
+```
+$ virtualenv venv
+$ source venv/bin/activate
+```
+
+**安装项目依赖和gunicorn**
+```
+(venv) $ pip install -r requirements/dev.txt
+(venv) $ pip install gunicorn
+```
+
+**配置MySQL**
+
+书本说不建议在生产环境中使用SQLite，改用MySQL。书本第5章第5.5节有句话：
+>配置对象中还有一个很有用的选项，即SQLALCHEMY_COMMIT_ON_TEARDOWN键，将其设为True，每次请求结束后都会自动提交数据库中的变动
+
+开发的时候SQLite是生效的，但放到服务器上我的MySQL是没有生效，一直写不进数据库，找问题找半天，郁闷得很，最后`db.session.add()`之后全加上`db.session.commit()`就好了！还是在代码中手动提交修改吧。
+
+安装MySQL(安装过程需要设置root密码)及Python相关库
+```
+(venv) $ sudo apt-get install mysql-server python-mysqldb libmysqlclient-dev
+(venv) $ pip install mysql-python
+```
+
+安装完后root用户登录MySQL并创建数据库，（**重要**）`CHARACTER SET 'utf8'`和`COLLATE 'utf8_general_ci'`是为了防止中文乱码。
+```
+(venv) $ mysql -u root -p
+mysql> CREATE DATABASE data
+       CHARACTER SET 'utf8'
+       COLLATE 'utf8_general_ci';
+mysql> exit
+```
+数据库名称自己设置，要与项目中的数据库名称一致，我这里是data。
+
+**配置环境变量**
+
+注意替换*的内容
+```
+(venv) $ export MAIL_SENDER=***@***.com
+(venv) $ export FLASKY_ADMIN=***@***.com
+(venv) $ export MAIL_USERNAME=***@***.com
+(venv) $ export MAIL_PASSWORD=*****
+(venv) $ export DATABASE_URL=mysql://root:*****@localhost/data
+(venv) $ export FLASK_CONFIG=production
+```
+我用的是qq邮箱，qq邮箱有个好处是使用SMTP服务的密码不是qq密码，这样如果暴露了也还有救。如果使用其他邮箱这里还要设置config.py中的SMTP服务器地址和端口等。
+
+**配置nginx**
+```
+(venv) $ sudo /etc/init.d/nginx start
+(venv) $ sudo rm /etc/nginx/sites-enabled/default
+(venv) $ sudo touch /etc/nginx/sites-available/Flask-Blog
+(venv) $ sudo ln -s /etc/nginx/sites-available/Flask-Blog /etc/nginx/sites-enabled/Flask-Blog
+```
+
+编辑nginx关于项目的配置文件：
+```
+(venv) $ sudo vim /etc/nginx/sites-enabled/Flask-Blog
+```
+添加以下内容并保存退出：
+```
+server {
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+    location /static {
+        alias  /home/www/Flask-Blog/app/static/;
+    }
+}
+```
+根据个人项目目录修改`alias`后面的静态文件路径，我这里是`/home/www/Flask-Blog/app/static/`。
+
+重启nginx
+```
+(venv) $ sudo /etc/init.d/nginx restart
+```
+
+**（重要）在python shell中创建数据表，并将角色写入数据库**
+```
+(venv) $ python manage.py shell
+>>> db.create_all()
+>>> Role.insert_roles()
+>>> exit()
+```
+如果没有将角色写入数据库，注册时会报这个错，我找了这个问题两天...
+```
+DetachedInstanceError: Parent instance <User at 0x7f175992f7d0> is not bound to a Session, and no contextual session is established; lazy load operation of attribute 'followed' cannot proceed
+```
+
+**启动博客**
+```
+(venv) $ cd /home/www/Flask-Blog/
+(venv) $ gunicorn manage:app -b localhost:8000
+```
+
+现在可以通过域名访问Flask Blog啦！
+
+当然也可以在后台运行，只需要在启动命令后面加上`&`就可以，这样即使你关闭shell，也可以继续访问网站了。
+```
+(venv) $ gunicorn manage:app -b localhost:8000 & 
+```
+
+**通过supervisor启动gunicorn**
+
+像上面每次需要手动启动gunicorn，很麻烦，可以安装supervisor自动启动gunicorn，这样万一gunicorn进程挂了，也可以自动重新启动。
+
+先将环境变量写入用户的启动文件`~/.bashrc`，写入脚本毕竟不是好的方法，万一被人攻击，得到这个脚本就悲剧了，但暂时没有找到更好的方法：
+```
+(venv) $ vim ~/.bashrc
+```
+
+在最后面添加以下内容，还是一样，替换*的内容：
+```
+export MAIL_SENDER=***@***.com
+export FLASKY_ADMIN=***@***.com
+export MAIL_USERNAME=***@***.com
+export MAIL_PASSWORD=*****
+export DATABASE_URL=mysql://root:*****@localhost/data
+export FLASK_CONFIG=production
+```
+
+安装supervisor
+```
+(venv) $ pip install supervisor
+(venv) $ echo_supervisord_conf > supervisor.conf  # 生成supervisor默认配置文件
+(venv) $ vim supervisor.conf                      # 修改supervisor配置文件，天剑gunicorn进程管理
+```
+
+在最后添加以下内容
+```
+[program:Flask-Blog]
+command = gunicorn manage:app -b localhost:8000
+directory = /home/www/Flask-Blog
+user = junction
+```
+
+运行命令启动supervisor
+```
+(venv) $ supervisord -c supervisor.conf
+```
+
+ok，现在关闭shell也可以继续访问网站了。
+
+** 以下是学习笔记**
+
 *****
 **6月9日**
 
