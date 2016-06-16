@@ -45,3 +45,6 @@ venv/
 
 # ignore tmp
 tmp/
+
+# ignore supervisor configure file
+supervisor.conf

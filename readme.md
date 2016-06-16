@@ -4,7 +4,7 @@
 ## **部署**
 书本第17章部署到Heroku平台上，我并没有按照书本的来，而是部署到了DigitalOcean上，基本上是参考了这里：https://realpython.com/blog/python/kickstarting-flask-on-ubuntu-setup-and-deployment/ ，但细节上有些更改，这篇博文里有些问题，也可能是我打开方式不对，它配置的虚拟环境没有用，安装的所有依赖全部装到系统的lib中去了，虽然也可以，但感觉还是分开吧。经过多次实践，以下是我的完整部署过程（已测试过两次）：
 
-刚开始不明白这个nginx有什么用，看了上面的链接的部署过程大概明白了，将外部的请求转发到内部的gunicorn服务器，称为反向代理(Apache)，一图说明一切：
+刚开始不明白这个nginx有什么用，看了上面的链接的部署过程大概明白了，将外部的请求转发到内部的gunicorn服务器，称为反向代理(Apache类似)，一图说明一切：
 ![](localhost.jpg)
 
 ### **准备工作**
@@ -180,7 +180,7 @@ export FLASK_CONFIG=production
 ```
 (venv) $ pip install supervisor
 (venv) $ echo_supervisord_conf > supervisor.conf  # 生成supervisor默认配置文件
-(venv) $ vim supervisor.conf                      # 修改supervisor配置文件，天剑gunicorn进程管理
+(venv) $ vim supervisor.conf                      # 修改supervisor配置文件，添加gunicorn进程管理
 ```
 
 在最后添加以下内容
@@ -188,6 +188,7 @@ export FLASK_CONFIG=production
 [program:Flask-Blog]
 command = gunicorn manage:app -b localhost:8000
 directory = /home/www/Flask-Blog
+autorestart = true
 user = junction
 ```
 
