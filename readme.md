@@ -49,7 +49,7 @@ $ sudo chown -R junction:junction www && cd www
 
 **下载源码（以下为我提供的一个示例）**
 ```
-$ git clone https://github.com/Junctionzc/Flask-Blog.git && cd Flask-Blog 
+$ git clone https://github.com/Junctionzc/flask-blog.git && cd flask-blog 
 ```
 
 **创建虚拟环境**
@@ -104,13 +104,13 @@ mysql> exit
 ```
 (venv) $ sudo /etc/init.d/nginx start
 (venv) $ sudo rm /etc/nginx/sites-enabled/default
-(venv) $ sudo touch /etc/nginx/sites-available/Flask-Blog
-(venv) $ sudo ln -s /etc/nginx/sites-available/Flask-Blog /etc/nginx/sites-enabled/Flask-Blog
+(venv) $ sudo touch /etc/nginx/sites-available/flask-blog
+(venv) $ sudo ln -s /etc/nginx/sites-available/flask-blog /etc/nginx/sites-enabled/flask-blog
 ```
 
 编辑nginx关于项目的配置文件：
 ```
-(venv) $ sudo vim /etc/nginx/sites-enabled/Flask-Blog
+(venv) $ sudo vim /etc/nginx/sites-enabled/flask-blog
 ```
 添加以下内容并保存退出：
 ```
@@ -121,11 +121,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
     }
     location /static {
-        alias  /home/www/Flask-Blog/app/static/;
+        alias  /home/www/flask-blog/app/static/;
     }
 }
 ```
-根据个人项目目录修改`alias`后面的静态文件路径，我这里是`/home/www/Flask-Blog/app/static/`。
+根据个人项目目录修改`alias`后面的静态文件路径，我这里是`/home/www/flask-blog/app/static/`。
 
 重启nginx
 ```
@@ -146,7 +146,7 @@ DetachedInstanceError: Parent instance <User at 0x7f175992f7d0> is not bound to 
 
 **启动博客**
 ```
-(venv) $ cd /home/www/Flask-Blog/
+(venv) $ cd /home/www/flask-blog/
 (venv) $ gunicorn manage:app -b localhost:8000
 ```
 
@@ -185,9 +185,9 @@ export FLASK_CONFIG=production
 
 在最后添加以下内容
 ```
-[program:Flask-Blog]
+[program:flask-blog]
 command = gunicorn manage:app -b localhost:8000
-directory = /home/www/Flask-Blog
+directory = /home/www/flask-blog
 autorestart = true
 user = junction
 ```
