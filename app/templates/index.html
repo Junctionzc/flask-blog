@@ -2,11 +2,9 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
-{% block title %}Flasky{% endblock %}
-
 {% block page_content %}
 <div class="page-header">
-    <h1>Hello, {% if current_user.is_authenticated %} {{ current_user.username}} {% else %} Stranger {% endif %}! </h1>
+    <h1>你好， {% if current_user.is_authenticated %} {{ current_user.username}} {% else %} 陌生人 {% endif %}！ </h1>
     <p>我们一起来探索世界吧！</p>
 </div>
 <div>
@@ -16,9 +14,9 @@
 </div>
 <div class="post-tabs">
     <ul class="nav nav-tabs">
-        <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">All</a></li>
+        <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">所有</a></li>
         {% if current_user.is_authenticated %}
-        <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">Followers</a></li>
+        <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">关注者</a></li>
         {% endif %}
     </ul>
     {% include '_posts.html' %}
