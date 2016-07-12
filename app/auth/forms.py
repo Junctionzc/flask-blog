@@ -10,8 +10,8 @@ class RegistrationForm(Form):
                                                Email()])
     username = StringField(u'用户名', validators = [
         Required(), Length(1, 64), Regexp('^[A-Za-z0-9_.]*$', 0, 
-                                          'Usernames must have only letters, ' 
-                                          'numbers, dots or underscores')])
+                                          u'用户名必须为字母， ' 
+                                          u'数字，点或者下划线')])
     password = PasswordField(u'密码', validators = [
         Required(), EqualTo('password2', message = 'Passwords must match.')])
     password2 = PasswordField(u'密码确认', validators = [Required()])
