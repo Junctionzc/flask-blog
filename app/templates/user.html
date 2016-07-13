@@ -22,8 +22,10 @@
         {% endif %}
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
         <p>
-            Member since {{ moment(user.member_since).format('L') }}.
-            Last seen {{ moment(user.last_seen).fromNow() }}.
+            成员从{{ moment(user.member_since).format('YYYY年M月D日') }}开始加入
+        </p>
+        <p>
+            上一次登录时间：{{ moment(user.last_seen).fromNow() }}
         </p>
         <p>
             {% if current_user.can(Permission.FOLLOW) and user != current_user %}
