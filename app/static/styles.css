@@ -1,6 +1,6 @@
 .navbar-inverse {
     background-color: #663366;
-    border-color: #fff;
+    border-color: #663366;
 }
 .navbar-inverse .navbar-brand {
     color: #fff;
@@ -10,13 +10,21 @@
 }
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
     color: #fff;
-    background-color: #CCCCFF;
+    background-color: #993399;
 }
 .navbar-inverse .navbar-toggle {
     border-color: #fff;
 }
 .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
-    background-color: #999999;
+    background-color: #993399;
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #fff;
+}
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+        color: #fff;
+    }
 }
 .profile-thumbnail {
     position: absolute;
@@ -130,7 +138,7 @@ a {
     text-decoration: none;
 }
 a:focus, a:hover {
-    color: #23527c;
+    color: #993399;
     text-decoration: none;
 }
 .label-primary {
