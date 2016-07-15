@@ -58,7 +58,12 @@ def edit_profile():
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form = form)
-    
+
+@main.route('/new-article')
+@login_required
+def new_article():
+    return render_template('new_article.html')
+
 @main.route('/edit-profile/<int:id>', methods = ['GET', 'POST'])
 @login_required
 @admin_required
