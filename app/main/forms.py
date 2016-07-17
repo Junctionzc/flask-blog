@@ -9,13 +9,13 @@ from ..models import Role, User
 
 class NameForm(Form):
     name = StringField(u'你的名字？', validators = [Required()])
-    submit = SubmitField(u'提交')
+    submit = SubmitField(u'确认')
     
 class EditProfileForm(Form):
     name = StringField(u'真实姓名', validators = [Length(0, 64)])
     location = StringField(u'地址', validators = [Length(0, 64)])
     about_me = TextAreaField(u'关于我')
-    submit = SubmitField(u'提交')
+    submit = SubmitField(u'确认')
     
 class EditProfileAdminForm(Form):
     email = StringField(u'电子邮箱', validators = [Required(), Length(1, 64),
@@ -29,7 +29,7 @@ class EditProfileAdminForm(Form):
     name = StringField(u'真实名字', validators = [Length(0, 64)])
     location = StringField(u'地址', validators = [Length(0, 64)])
     about_me = TextAreaField(u'关于我')
-    submit = SubmitField(u'提交')
+    submit = SubmitField(u'确认')
     
     def __init__(self, user, *args, **kwargs):
         super(EditProfileAdminForm, self).__init__(*args, **kwargs)
@@ -49,8 +49,8 @@ class EditProfileAdminForm(Form):
             
 class PostForm(Form):
     body = PageDownField(u"在想什么呢？", validators = [Required()])
-    submit = SubmitField(u'提交')
+    submit = SubmitField(u'发表')
     
 class CommentForm(Form):
     body = StringField(u'输入你的评论', validators = [Required()])
-    submit = SubmitField(u'提交')
+    submit = SubmitField(u'发表')

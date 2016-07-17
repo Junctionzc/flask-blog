@@ -27,6 +27,7 @@
                     <li><a href="{{ url_for('main.new_article')}}">写文章</a></li>
                 {% endif %}
             </ul>
+
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.can(Permission.MODERATE_COMMENTS) %}
                 <li><a href="{{ url_for('main.moderate')}}">管理评论</a></li>
@@ -34,17 +35,17 @@
                 {% if current_user.is_authenticated %}
                 <li class="dropdown">
                     <a href='#' class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ current_user.gravatar(size=18) }}">
-                        账户 <b class="caret"></b>
+                        <img src="{{ current_user.gravatar(size=18) }}"> {{ current_user.username }} <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url_for('main.user', username=current_user.username) }}">个人资料</a></li>
-                        <li><a href="{{ url_for('auth.change_password')}}">更改密码</a></li>
-                        <li><a href="{{ url_for('auth.change_email_request')}}">更改邮件</a></li>                        
+                        <li><a href="{{ url_for('main.user', username=current_user.username) }}">个人主页</a></li>
+                        <li><a href="{{ url_for('auth.change_password')}}">修改密码</a></li>
+                        <li><a href="{{ url_for('auth.change_email_request')}}">修改邮箱</a></li>                        
                         <li><a href="{{ url_for('auth.logout') }}">注销</a></li>
                     </ul>
                 </li>
                 {% else %}
+                <li><a href="{{ url_for('auth.register') }}">注册</a></li>
                 <li><a href="{{ url_for('auth.login') }}">登录</a></li>
                 {% endif %}
             </ul>

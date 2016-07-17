@@ -16,7 +16,7 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
-        flash(u'非法用户名和密码')
+        flash(u'用户名和密码错误')
     return render_template('auth/login.html', form = form)
 
 @auth.route('/confirm/<token>')
@@ -25,7 +25,7 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('main.index'))
     if current_user.confirm(token):
-        flash(u'你已经确认你的账户，谢谢！')
+        flash(u'你已经确认你的账号，谢谢！')
     else:
         flash(u'确认链接非法或者已经失效')
     return redirect(url_for('main.index'))

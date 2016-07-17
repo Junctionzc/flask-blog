@@ -1,0 +1,20 @@
+<div>
+    <form action="" method="post" class="form" role="form">
+        <div class="form-group required">
+            <div style="display:none;">
+                {{ form.csrf_token() }}
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.body(only_input=True, class="input-markdown", placeholder=form.body.label.text, required=True) }}
+                </div>
+                <div class="col-md-6">
+                {{ form.body(only_preview=True) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+             {{ form.submit(class="btn btn-default") }}
+        </div>
+    </form>
+</div>

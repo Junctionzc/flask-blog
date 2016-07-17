@@ -3,22 +3,20 @@
 {% import "_macros.html" as macros %}
 
 {% block page_content %}
+{% if current_user.is_anonymous %}
 <div class="page-header">
-    <h1>你好， {% if current_user.is_authenticated %} {{ current_user.username}} {% else %} 陌生人 {% endif %}！ </h1>
-    <p>我们一起来探索世界吧！</p>
+    <h3>看起来你很喜欢这里！</h3>
+    <a href="{{ url_for('auth.register') }}">我们一起来探索世界吧！</a>
 </div>
-<div>
-    {% if current_user.can(Permission.WRITE_ARTICLES) %}
-    {{ wtf.quick_form(form) }}
-    {% endif %}
-</div>
+{% endif %}
 <div class="post-tabs">
+    {% if current_user.is_authenticated %}
     <ul class="nav nav-tabs">
-        <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">所有</a></li>
-        {% if current_user.is_authenticated %}
-        <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">关注者</a></li>
-        {% endif %}
+        <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">所有文章</a></li>
+
+        <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">关注者的文章</a></li>
     </ul>
+    {% endif %}
     {% include '_posts.html' %}
 </div>
 {% if pagination %}
