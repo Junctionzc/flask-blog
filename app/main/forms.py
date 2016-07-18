@@ -48,7 +48,8 @@ class EditProfileAdminForm(Form):
             raise ValidationError(u'用户名被占用')
             
 class PostForm(Form):
-    body = PageDownField(u"在想什么呢？", validators = [Required()])
+    title = StringField(u'输入文章标题', validators = [Required()])
+    body = PageDownField(u"输入文章内容", validators = [Required()])
     submit = SubmitField(u'发表')
     
 class CommentForm(Form):
