@@ -3,7 +3,14 @@
         <div class="post-title">
             <h1>{{ post.title }}</h1>
         </div>
-        <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>
+        <div class="post-author">
+            <a href="{{ url_for('.user', username=post.author.username) }}">
+                {% if post.author.name != None %}
+                    {{ post.author.name }}
+                {% else %}
+                    {{ post.author.username }}
+                {% endif %}
+            </a></div>
         <div class="post-time">- 发布于{{ moment(post.timestamp).fromNow() }}</div>
         {% if current_user == post.author %}
             <div class="post-edit">

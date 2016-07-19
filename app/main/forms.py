@@ -12,7 +12,7 @@ class NameForm(Form):
     submit = SubmitField(u'确认')
     
 class EditProfileForm(Form):
-    name = StringField(u'真实姓名', validators = [Length(0, 64)])
+    name = StringField(u'昵称', validators = [Length(0, 64)])
     location = StringField(u'地址', validators = [Length(0, 64)])
     about_me = TextAreaField(u'关于我')
     submit = SubmitField(u'确认')

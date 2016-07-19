@@ -8,7 +8,15 @@
         </div>
         <div class="comment-content">
             <div class="comment-date">{{ moment(comment.timestamp).fromNow() }}</div>
-            <div class="comment-author"><a href="{{ url_for('.user', username=comment.author.username) }}">{{ comment.author.username }}</a></div>
+            <div class="comment-author">
+                <a href="{{ url_for('.user', username=comment.author.username) }}">
+                    {% if post.author.name != None %}
+                        {{ post.author.name }}
+                    {% else %}
+                        {{ post.author.username }}
+                    {% endif %}
+                </a>
+            </div>
             <div class="comment-body">
                 {% if comment.disabled %}
                 <p><i>这条评论已经被管理员关闭。</i></p>
