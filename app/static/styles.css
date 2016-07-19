@@ -39,6 +39,9 @@ div.post-time {
     float: left;
     margin-right: 6px;
 }
+div.post-edit {
+    float: left;
+}
 div.post-thumbnail {
     position: absolute;
     right: 68px;
@@ -138,8 +141,9 @@ textarea:-ms-input-placeholder {
     margin: 10px 0px;
 }
 .post-body {
-    margin-top: 10px;
+    margin-top: 38px;
     font-size: 16px;
+    clear: both;
 }
 .post-body h1 {
     font-size: 140%;
