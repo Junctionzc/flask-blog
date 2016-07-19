@@ -1,3 +1,4 @@
+#! -*- coding: utf-8 -*-
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin, AnonymousUserMixin
@@ -270,7 +271,7 @@ class User(UserMixin, db.Model):
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key = True)
-    title = db.Column(db.Unicode(128), unique = True)
+    title = db.Column(db.Unicode(128))
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -321,6 +322,14 @@ class Post(db.Model):
             'comment_count': self.comments.count()
         }
         return json_post
+        
+    @staticmethod
+    def add_default_title():
+        for post in Post.query.all():
+            if not post.title:
+                post.title = u'默认标题'
+                db.session.add(post)
+                db.session.commit()
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 

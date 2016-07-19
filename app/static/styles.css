@@ -1,3 +1,14 @@
+#title {
+    height: 48px;
+    font-size: 20px;
+    color: #000;
+    border-radius: 6px;
+}
+#comments {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+}
 div.post-tabs {
     margin-top: -8px;
 }
@@ -21,6 +32,10 @@ ul.posts li.post:hover {
 }
 div.post-author {
     font-weight: bold;
+    float: left;
+    margin-right: 6px;
+}
+div.post-time {
     float: left;
     margin-right: 6px;
 }
@@ -79,6 +94,7 @@ div.flask-pagedown-preview {
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     padding: 10px 10px;
+    font-size: 16px;
     overflow: auto;
 }
 div.flask-pagedown-preview h1 {
@@ -116,6 +132,14 @@ textarea::-moz-placeholder {
 }
 textarea:-ms-input-placeholder { 
     color:    #989898;
+}
+.post-title {
+    font-size: 24px;
+    margin: 10px 0px;
+}
+.post-body {
+    margin-top: 10px;
+    font-size: 16px;
 }
 .post-body h1 {
     font-size: 140%;
@@ -164,6 +188,12 @@ textarea:-ms-input-placeholder {
     min-height: 260px;
     margin-left: 280px;
 }
+.post-title-default {
+    color: #555;
+}
+.post-title-default:focus, .post-title-default:hover{
+    color: #000;
+}
 .label-primary {
     background-color: #663366;
 }
@@ -193,5 +223,6 @@ textarea:-ms-input-placeholder {
     margin: 10px 0px 10px 0px;
     padding: 8px 12px;
     border-radius: 4px;
+    font-size: 16px;
     resize: none;
 }

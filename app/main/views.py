@@ -61,8 +61,8 @@ def new_article():
                 author = current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
-        flash(u'文章已更新')
-        return redirect(url_for('.new_article'))
+        flash(u'文章已发布')
+        return redirect(url_for('.post', id = post.id))
     return render_template('new_article.html', form = form)
 
 @main.route('/edit-profile/<int:id>', methods = ['GET', 'POST'])
@@ -102,7 +102,7 @@ def post(id):
                           author = current_user._get_current_object())
         db.session.add(comment)
         db.session.commit()
-        flash(u'你的评论已提交')
+        flash(u'你的评论已发布')
         return redirect(url_for('.post', id = post.id, page = -1))
     page = request.args.get('page', 1, type = int)
     if page == -1:
@@ -112,7 +112,7 @@ def post(id):
         page, per_page = current_app.config['FLASKY_COMMENTS_PER_PAGE'],
         error_out = False) 
     comments = pagination.items
-    return render_template('post.html', posts = [post], form = form,
+    return render_template('post.html', post = post, form = form,
                            comments = comments, pagination = pagination)                                         
     
 @main.route('/edit/<int:id>', methods = ['GET', 'POST'])

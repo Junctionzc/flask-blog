@@ -1,0 +1,27 @@
+<ul class="posts">
+    <div class="post-content">
+        <div class="post-title">
+            <h1>{{ post.title }}</h1>
+        </div>
+        <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>
+        <div class="post-time">- 发布于{{ moment(post.timestamp).fromNow() }}</div>
+        <div>
+            {% if current_user == post.author %}
+            <a href="{{ url_for('.edit', id=post.id) }}">
+                <span>编辑</span>
+            </a>
+            {% elif current_user.is_administrator() %}
+            <a href="{{ url_for('.edit', id=post.id) }}">
+                <span>编辑 [管理员]</span>
+            </a>
+            {% endif %}
+        </div>        
+        <div class="post-body">
+            {% if post.body_html %}
+                {{ post.body_html | safe }}
+            {% else %}
+                {{ post.body }}
+            {% endif %}
+        </div>
+    </div>
+</ul>

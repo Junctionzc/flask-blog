@@ -5,7 +5,7 @@
 {% block page_content %}
 {% if current_user.is_anonymous %}
 <div class="page-header">
-    <h3>看起来你很喜欢这里！</h3>
+    <h2>看起来你很喜欢这里！</h2>
     <a href="{{ url_for('auth.register') }}">我们一起来探索世界吧！</a>
 </div>
 {% endif %}
