@@ -10,10 +10,10 @@
             <div class="comment-date">{{ moment(comment.timestamp).fromNow() }}</div>
             <div class="comment-author">
                 <a href="{{ url_for('.user', username=comment.author.username) }}">
-                    {% if post.author.name != None %}
-                        {{ post.author.name }}
+                    {% if comment.author.name != None %}
+                        {{ comment.author.name }}
                     {% else %}
-                        {{ post.author.username }}
+                        {{ comment.author.username }}
                     {% endif %}
                 </a>
             </div>
