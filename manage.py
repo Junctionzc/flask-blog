@@ -49,5 +49,20 @@ def profile(length = 25, profile_dir = None):
                                       profile_dir = profile_dir)
     app.run()
 
+@manager.command
+def deploy():
+    """Run deploment tasks."""
+    from flask.ext.migrate import upgrade
+    from app.models import Role, User, Post, Category
+    
+    upgrade()
+    
+    Role.insert_roles()
+    User.add_self_follows()
+    Category.add_categorys()
+    Post.add_default_title()
+    Post.add_default_category()
+    
+
 if __name__ == '__main__':
     manager.run()
