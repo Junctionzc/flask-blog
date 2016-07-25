@@ -5,7 +5,7 @@ from wtforms import StringField, TextAreaField, BooleanField, SelectField, \
                     SubmitField
 from wtforms.validators import Required, Length, Email, Regexp
 from wtforms import ValidationError
-from ..models import Role, User
+from ..models import Role, User, Category
 
 class NameForm(Form):
     name = StringField(u'你的名字？', validators = [Required()])
@@ -49,8 +49,14 @@ class EditProfileAdminForm(Form):
             
 class PostForm(Form):
     title = StringField(u'输入文章标题', validators = [Required()])
+    category = SelectField(u'分类', coerce = int);
     body = PageDownField(u"输入文章内容", validators = [Required()])
     submit = SubmitField(u'发表')
+    
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.category.choices = [(category.id, category.category)
+                            for category in Category.query.order_by(Category.category).all()]
     
 class CommentForm(Form):
     body = StringField(u'输入你的评论', validators = [Required()])

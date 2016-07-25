@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, url_for, abort, flash, \
 from flask.ext.login import login_required, current_user
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
-from ..models import Role, User, Permission, Post, Comment
+from ..models import Role, User, Permission, Post, Comment, Category
 from ..import db
 from ..decorators import permission_required, admin_required
 from flask.ext.sqlalchemy import get_debug_queries
@@ -125,12 +125,14 @@ def edit(id):
     form = PostForm()
     if form.validate_on_submit():
         post.title = form.title.data
+        post.category = Category.query.get(form.category.data)
         post.body = form.body.data
         db.session.add(post)
         db.session.commit()
         flash(u'文章已更新')
         return redirect(url_for('.post', id = post.id))
     form.title.data = post.title
+    form.category.data = post.category_id
     form.body.data = post.body
     return render_template('edit_post.html', form = form)
     

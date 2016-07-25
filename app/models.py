@@ -277,6 +277,7 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     body_html = db.Column(db.Text)
     comments = db.relationship('Comment', backref = 'post', lazy= 'dynamic')
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     
     @staticmethod
     def generate_fake(count = 100):
@@ -330,6 +331,15 @@ class Post(db.Model):
                 post.title = u'默认标题'
                 db.session.add(post)
                 db.session.commit()
+                
+    @staticmethod
+    def add_default_category():
+        for post in Post.query.all():
+            if not post.category:
+                post.category = Category.query.first()
+                db.session.add(post)
+                db.session.commit()
+                
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 
@@ -371,6 +381,28 @@ class Comment(db.Model):
         return Comment(body=body) 
             
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
+
+class Category(db.Model):
+    __tablename__ = 'category'
+    id = db.Column(db.Integer, primary_key = True)
+    category = db.Column(db.Unicode(128), unique = True)
+    posts = db.relationship('Post', backref = 'category')
+
+    @staticmethod
+    def add_categorys():
+        categorys = [
+            u'博客开发',
+            u'生活点滴'
+        ]
+        for c in categorys:
+            category = Category.query.filter_by(category = c).first()
+            if category is None:
+                category = Category(category = c)
+            db.session.add(category)
+        db.session.commit()
+
+    def __repr__(self):
+        return '<Category %r>' % self.category
 
 class AnonymousUser(AnonymousUserMixin):
     def can(slef, permissions):
