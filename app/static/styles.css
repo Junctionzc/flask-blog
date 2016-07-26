@@ -9,14 +9,10 @@
     padding-top: 16px;
     border-top: 1px solid #e0e0e0;
 }
-div.post-tabs {
-    margin-top: -8px;
-}
 ul.posts {
     list-style-type: none;
     padding: 0px;
     margin: 16px 0px 0px 0px;
-    border-top: 1px solid #e0e0e0;
 }
 div.post-tabs ul.posts {
     margin: 0px;
@@ -24,11 +20,14 @@ div.post-tabs ul.posts {
 }
 ul.posts li.post {
     padding: 8px;
-    border-bottom: 1px solid #e0e0e0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 16px;
     position: relative;
+    box-shadow: rgb(167, 163, 163) 4px 4px 16px;
 }
 ul.posts li.post:hover {
-    background-color: #f0f0f0;
+    box-shadow: rgb(108, 105, 105) 4px 4px 16px;
 }
 div.post-author {
     font-weight: bold;
@@ -140,6 +139,10 @@ textarea::-moz-placeholder {
 textarea:-ms-input-placeholder { 
     color:    #989898;
 }
+.index-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+}
 .pagination>li>a, .pagination>li>span {
     color: #663366;
 }
@@ -168,6 +171,10 @@ textarea:-ms-input-placeholder {
 }
 .table.followers tr {
     border-bottom: 1px solid #e0e0e0;
+}
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+    color: #FFF;
+    background-color: #663366;
 }
 .navbar-inverse {
     background-color: #663366;

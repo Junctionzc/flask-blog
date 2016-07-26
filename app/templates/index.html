@@ -3,27 +3,32 @@
 {% import "_macros.html" as macros %}
 
 {% block page_content %}
-{% if current_user.is_anonymous %}
-<div class="page-header">
-    <h2>看起来你很喜欢这里！</h2>
-    <a href="{{ url_for('auth.register') }}">我们一起来探索世界吧！</a>
+<div class="row">
+    <div class='col-md-9'>
+        {% if current_user.is_anonymous %}
+        <div class="index-header">
+            <h2>看起来你挺喜欢这里！</h2>
+            <a href="{{ url_for('auth.register') }}">我们一起来探索世界吧！</a>
+        </div>
+        {% endif %}
+        <div class="post-tabs ">
+            {% include '_posts.html' %}
+        </div>
+        {% if pagination %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.index') }}
+        </div>
+        {% endif %}
+    </div>
+    <div class='col-md-3'>
+        <ul class="nav nav-pills nav-stacked">
+            {% if current_user.is_authenticated %}
+                <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">所有文章</a></li>
+                <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">我关注的用户文章</a></li>
+            {% endif %}
+        </ul>
+    </div>
 </div>
-{% endif %}
-<div class="post-tabs">
-    {% if current_user.is_authenticated %}
-    <ul class="nav nav-tabs">
-        <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">所有文章</a></li>
-
-        <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">关注者的文章</a></li>
-    </ul>
-    {% endif %}
-    {% include '_posts.html' %}
-</div>
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.index') }}
-</div>
-{% endif %}
 {% endblock %}
 
 {% block scripts %}
