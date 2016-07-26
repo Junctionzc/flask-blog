@@ -39,6 +39,10 @@ div.post-time {
     float: left;
     margin-right: 6px;
 }
+div.post-category {
+    float: left;
+    margin-right: 6px;
+}
 div.post-edit {
     float: left;
 }
@@ -136,9 +140,17 @@ textarea::-moz-placeholder {
 textarea:-ms-input-placeholder { 
     color:    #989898;
 }
+.pagination>li>a, .pagination>li>span {
+    color: #663366;
+}
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
+    z-index: 3;
+    color: #993399;
+}
 .post-title {
     font-size: 24px;
     margin: 10px 0px;
+    clear: both;
 }
 .post-body {
     margin-top: 38px;

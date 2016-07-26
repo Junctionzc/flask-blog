@@ -16,7 +16,12 @@
                     {% endif %}
                 </a>
             </div>
-            <div>- 发布于{{ moment(post.timestamp).fromNow() }}</div>
+            <div class="post-time">- 发布于{{ moment(post.timestamp).fromNow() }}</div>
+            <div class="post-category">
+                <a href="{{ url_for('.category', id=post.category_id)}}">
+                    {{ post.category.category }}
+                </a>
+            </div>
             <div class="post-title">
                 <a href="{{ url_for('.post', id=post.id) }}">
                     <span class="post-title-default">{{ post.title }}</span>

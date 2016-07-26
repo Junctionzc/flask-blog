@@ -336,7 +336,7 @@ class Post(db.Model):
     def add_default_category():
         for post in Post.query.all():
             if not post.category:
-                post.category = Category.query.first()
+                post.category = Category.query.filter_by(category = u'默认分类').first()
                 db.session.add(post)
                 db.session.commit()
                 
@@ -386,13 +386,14 @@ class Category(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key = True)
     category = db.Column(db.Unicode(128), unique = True)
-    posts = db.relationship('Post', backref = 'category')
+    posts = db.relationship('Post', backref = 'category', lazy = 'dynamic')
 
     @staticmethod
     def add_categorys():
         categorys = [
             u'博客开发',
-            u'生活点滴'
+            u'生活点滴',
+            u'默认分类'
         ]
         for c in categorys:
             category = Category.query.filter_by(category = c).first()

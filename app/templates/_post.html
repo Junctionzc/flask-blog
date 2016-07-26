@@ -12,6 +12,11 @@
                 {% endif %}
             </a></div>
         <div class="post-time">- 发布于{{ moment(post.timestamp).fromNow() }}</div>
+        <div class="post-category">
+            <a href="{{ url_for('.category', id=post.category_id)}}">
+                {{ post.category.category }}
+            </a>
+        </div>
         {% if current_user == post.author %}
             <div class="post-edit">
                 <a href="{{ url_for('.edit', id=post.id) }}">
