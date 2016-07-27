@@ -5,17 +5,21 @@
 {% block title %}讲一个故事 - 文章{% endblock %}
 
 {% block page_content %}
-{% include '_post.html' %}
-<h4 id="comments">评论</h4>
-{% if current_user.can(Permission.COMMENT) %}
-<div class="comment-form">
-    {{ wtf.quick_form(form) }}
+<div class="row">
+    <div class='col-md-9'>
+        {% include '_post.html' %}
+        <h4 id="comments">评论</h4>
+        {% if current_user.can(Permission.COMMENT) %}
+        <div class="comment-form">
+            {{ wtf.quick_form(form) }}
+        </div>
+        {% endif %}
+        {% include '_comments.html' %}
+        {% if pagination %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.post', fragment='#comments', id=post.id) }}
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% endif %}
-{% include '_comments.html' %}
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.post', fragment='#comments', id=post.id) }}
-</div>
-{% endif %}
 {% endblock %}
