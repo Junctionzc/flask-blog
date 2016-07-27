@@ -5,11 +5,19 @@
 {% block title %}讲一个故事{% endblock %}
 
 {% block page_content %}
-<h3>{{ category.category }}</h3>
-{% include '_posts.html' %}
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.category', id=category.id) }}
+<div class="row">
+    <div class='col-md-9'>
+        {% include '_posts.html' %}
+        {% if pagination %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.category', id=category.id) }}
+        </div>
+        {% endif %}
+    </div>
+    <div class='col-md-3'>
+        <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="{{ url_for('.category', id=category.id) }}">{{ category.category }}</a></li>
+        </ul>
+    </div>    
 </div>
-{% endif %}
 {% endblock %}
