@@ -71,8 +71,8 @@ def new_article():
     form = PostForm()
     if current_user.can(Permission.WRITE_ARTICLES) and \
         form.validate_on_submit():
-        post = Post(title = form.title.data, body = form.body.data,
-                author = current_user._get_current_object())
+        post = Post(title = form.title.data, category = Category.query.get(form.category.data), 
+                    body = form.body.data, author = current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
         flash(u'文章已发布')
