@@ -138,10 +138,6 @@ textarea::-moz-placeholder {
 textarea:-ms-input-placeholder { 
     color:    #989898;
 }
-.index-header {
-    padding-bottom: 9px;
-    margin: 40px 0 20px;
-}
 .pagination>li>a, .pagination>li>span {
     color: #663366;
 }
