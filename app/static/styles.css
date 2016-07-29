@@ -167,6 +167,11 @@ textarea:-ms-input-placeholder {
 .table.followers tr {
     border-bottom: 1px solid #e0e0e0;
 }
+.col-xs-nav {
+    margin-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     color: #FFF;
     background-color: #663366;
@@ -240,6 +245,7 @@ textarea:-ms-input-placeholder {
     height: 384px;
     margin: 10px 0px 10px 0px;
     padding: 8px 12px;
+    border: 1px solid #e0e0e0;
     border-radius: 4px;
     font-size: 16px;
     resize: none;

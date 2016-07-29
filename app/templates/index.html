@@ -10,6 +10,16 @@
     </div>
 {% endif %}
 <div class="row">
+    <div class='visible-xs-block col-xs-nav'>
+        <ul class="nav nav-pills nav-stacked">
+            {% if current_user.is_anonymous %}
+                <li class="active"><a href="{{ url_for('.index') }}">所有文章 {{ posts_amount[1] }}</a></li>
+            {% elif current_user.is_authenticated %}
+                <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">所有文章 {{ posts_amount[1] }}</a></li>
+                <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">关注的用户文章 {{ posts_amount[0] }}</a></li>
+            {% endif %}
+        </ul>
+    </div>    
     <div class='col-md-9 col-sm-9'>
         <div class="post-tabs">
             {% include '_posts.html' %}
