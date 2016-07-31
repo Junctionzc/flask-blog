@@ -5,7 +5,7 @@
         </div>
         <div class="post-author">
             <a href="{{ url_for('.user', username=post.author.username) }}">
-                {% if post.author.name != None %}
+                {% if post.author.name != None and post.author.name != '' %}
                     {{ post.author.name }}
                 {% else %}
                     {{ post.author.username }}

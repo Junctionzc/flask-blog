@@ -243,6 +243,14 @@ textarea:-ms-input-placeholder {
     background-color: #993399;
     border-color: #993399;
 }
+.btn-link {
+    color: #996699;
+}
+.btn-link:focus, .btn-link:hover {
+    color: #663366;
+    text-decoration: underline;
+    background-color: transparent;
+}
 .input-markdown {
     width: 100%;
     height: 384px;
