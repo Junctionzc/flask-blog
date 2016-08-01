@@ -24,10 +24,11 @@
                 </a>
             </div> 
             <div class="post-delete">
-                <a href="{{ url_for('.post_delete', id=post.id) }}">
+                <a href="" data-toggle="modal" data-target="#post-delete-tips-modal">
                     <span>删除</span>
                 </a>
             </div>
+            {% include '_post_delete_tips.html' %}
         {% elif current_user.is_administrator() %}
             <div class="post-edit">
                 <a href="{{ url_for('.edit', id=post.id) }}">
@@ -35,10 +36,11 @@
                 </a>
             </div>
             <div class="post-delete">
-                <a href="{{ url_for('.post_delete', id=post.id) }}">
+                <a href="" data-toggle="modal" data-target="#post-delete-tips-modal">
                     <span>删除[管理员]</span>
                 </a>
             </div>
+            {% include '_post_delete_tips.html' %}
         {% endif %}
         <div class="post-body">
             {% if post.body_html %}
