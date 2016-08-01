@@ -133,6 +133,13 @@ def post(id):
     comments = pagination.items
     return render_template('post.html', post = post, form = form,
                            comments = comments, pagination = pagination)                                         
+
+@main.route('/post/delete/<int:id>')
+def post_delete(id):
+    post = Post.query.get_or_404(id)
+    post.delete()
+    flash(u'文章已删除')
+    return redirect(url_for('.index'))
     
 @main.route('/edit/<int:id>', methods = ['GET', 'POST'])
 @login_required

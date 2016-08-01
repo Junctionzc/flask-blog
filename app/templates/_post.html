@@ -23,10 +23,20 @@
                     <span>编辑</span>
                 </a>
             </div> 
+            <div class="post-delete">
+                <a href="{{ url_for('.post_delete', id=post.id) }}">
+                    <span>删除</span>
+                </a>
+            </div>
         {% elif current_user.is_administrator() %}
             <div class="post-edit">
                 <a href="{{ url_for('.edit', id=post.id) }}">
-                    <span>编辑 [管理员]</span>
+                    <span>编辑[管理员]</span>
+                </a>
+            </div>
+            <div class="post-delete">
+                <a href="{{ url_for('.post_delete', id=post.id) }}">
+                    <span>删除[管理员]</span>
                 </a>
             </div>
         {% endif %}

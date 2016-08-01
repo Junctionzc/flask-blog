@@ -1,7 +1,7 @@
 #title{
     height: 48px;
     font-size: 20px;
-    color: #989898;
+    color: #333;
     border-radius: 6px;
 }
 #comments {
@@ -42,6 +42,10 @@ div.post-category {
     margin-right: 6px;
 }
 div.post-edit {
+    float: left;
+    margin-right: 6px;
+}
+div.post-delete {
     float: left;
 }
 div.post-thumbnail {

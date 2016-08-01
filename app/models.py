@@ -324,7 +324,14 @@ class Post(db.Model):
             'comment_count': self.comments.count()
         }
         return json_post
-        
+    
+    def delete(self):
+        comments = self.comments
+        for comment in comments:
+            db.session.delete(comment)
+        db.session.delete(self)
+        db.session.commit()
+       
     @staticmethod
     def add_default_title():
         for post in Post.query.all():
