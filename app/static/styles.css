@@ -41,6 +41,11 @@ div.post-category {
     float: left;
     margin-right: 6px;
 }
+div.post-statistics {
+    font-style: italic;
+    float: left;
+    margin-right: 6px;
+}
 div.post-edit {
     float: left;
     margin-right: 6px;

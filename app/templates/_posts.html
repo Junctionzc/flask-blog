@@ -22,6 +22,7 @@
                     {{ post.category.category }}
                 </a>
             </div>
+            <div class="post-statistics">- 赞 {{ post.likes.count() }}</div>
             <div class="post-title">
                 <a href="{{ url_for('.post', id=post.id) }}">
                     <span class="post-title-default">{{ post.title }}</span>
