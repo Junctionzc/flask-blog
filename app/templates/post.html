@@ -6,7 +6,7 @@
 
 {% block page_content %}
 <div class="row">
-    <div class='col-md-9'>
+    <div class='col-md-9 col-sm-9'>
         {% include '_post.html' %}
         <h4 id="comments">评论</h4>
         {% if current_user.can(Permission.COMMENT) %}

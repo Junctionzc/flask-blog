@@ -85,6 +85,7 @@ class User(UserMixin, db.Model):
                                 lazy = 'dynamic',
                                 cascade = 'all, delete-orphan')
     comments = db.relationship('Comment', backref = 'author', lazy = 'dynamic')
+    likes = db.relationship('Like', backref = 'author', lazy = 'dynamic')
     
     @property
     def password(self):
@@ -198,6 +199,9 @@ class User(UserMixin, db.Model):
     def is_followed_by(self, user):
         return self.followers.filter_by(follower_id = user.id).first() is not None
 
+    def is_like_post(self, post):
+        return self.likes.filter_by(post_id = post.id).first() is not None
+
     def to_json(self):
         json_use = {
             'url': url_for('api_get_user', id = self.id, _external = True),
@@ -279,6 +283,7 @@ class Post(db.Model):
     body_html = db.Column(db.Text)
     comments = db.relationship('Comment', backref = 'post', lazy= 'dynamic')
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    likes = db.relationship('Like', backref = 'post', lazy = 'dynamic')
     
     @staticmethod
     def generate_fake(count = 100):
@@ -329,6 +334,9 @@ class Post(db.Model):
         comments = self.comments
         for comment in comments:
             db.session.delete(comment)
+        likes = self.likes
+        for like in likes:
+            db.session.delete(like)
         db.session.delete(self)
         db.session.commit()
        
@@ -412,6 +420,13 @@ class Category(db.Model):
 
     def __repr__(self):
         return '<Category %r>' % self.category
+
+class Like(db.Model):
+    __tablename__ = 'like'
+    id = db.Column(db.Integer, primary_key = True)
+    timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
 class AnonymousUser(AnonymousUserMixin):
     def can(slef, permissions):

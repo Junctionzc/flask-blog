@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, url_for, abort, flash, \
 from flask.ext.login import login_required, current_user
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
-from ..models import Role, User, Permission, Post, Comment, Category
+from ..models import Role, User, Permission, Post, Comment, Category, Like
 from ..import db
 from ..decorators import permission_required, admin_required
 from flask.ext.sqlalchemy import get_debug_queries
@@ -135,18 +135,35 @@ def post(id):
                            comments = comments, pagination = pagination)                                         
 
 @main.route('/post/delete/<int:id>')
+@login_required
 def post_delete(id):
     post = Post.query.get_or_404(id)
+    if current_user != post.author and \
+        not current_user.can(Permission.ADMINISTER):
+        about(403)
     post.delete()
     flash(u'文章已删除')
     return redirect(url_for('.index'))
-    
+
+@main.route('/post/like/<int:id>')
+@login_required
+def post_like(id):
+    post = Post.query.get_or_404(id)
+    if current_user.is_like_post(post):
+        like = Like.query.filter_by(post_id = post.id).first()
+        db.session.delete(like)
+    else:
+        like = Like(post = post, author = current_user._get_current_object())
+        db.session.add(like)
+    db.session.commit()
+    return redirect(url_for('.index'))
+
 @main.route('/edit/<int:id>', methods = ['GET', 'POST'])
 @login_required
 def edit(id):
     post = Post.query.get_or_404(id)
     if current_user != post.author and \
-            not current_user.can(Permission.ADMINISTER):
+        not current_user.can(Permission.ADMINISTER):
         about(403)
     form = PostForm()
     if form.validate_on_submit():

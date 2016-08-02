@@ -40,6 +40,17 @@
                 <a href="{{ url_for('.post', id=post.id) }}#comments">
                     <span class="label label-primary">{{ post.comments.count() }} 评论</span>
                 </a>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_like_post(post) %}
+                        <a href="{{ url_for('.post_like', id=post.id) }}">
+                            <span class="label label-primary">取消赞</span>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('.post_like', id=post.id) }}">
+                            <span class="label label-primary">点赞</span>
+                        </a>
+                    {% endif%}
+                {% endif %}
             </div>
         </div>
     </li>
