@@ -29,7 +29,7 @@ def index():
     posts = pagination.items
     return render_template('index.html', posts = posts, 
                            show_followed = show_followed, pagination = pagination, 
-                           posts_amount = posts_amount)
+                           posts_amount = posts_amount, redir = '.index', page = page)
 
 @main.route('/user/<username>')
 def user(username):
@@ -37,7 +37,7 @@ def user(username):
     if user is None:
         abort(404)
     posts = user.posts.order_by(Post.timestamp.desc()).all()
-    return render_template('user.html', user = user, posts = posts) 
+    return render_template('user.html', user = user, posts = posts, redir = '.user') 
     
 @main.route('/category/<int:id>')
 def category(id):
@@ -51,7 +51,7 @@ def category(id):
         error_out = False)    
     posts = pagination.items
     return render_template('category.html', category = category, 
-                            posts = posts, pagination = pagination)
+                            posts = posts, pagination = pagination, redir = '.category', page = page)
 
 @main.route('/edit-profile', methods = ['GET', 'POST'])
 @login_required
@@ -132,7 +132,7 @@ def post(id):
         error_out = False) 
     comments = pagination.items
     return render_template('post.html', post = post, form = form,
-                           comments = comments, pagination = pagination)                                         
+                           comments = comments, pagination = pagination, redir = '.post')                                         
 
 @main.route('/post/delete/<int:id>')
 @login_required
@@ -145,10 +145,11 @@ def post_delete(id):
     flash(u'文章已删除')
     return redirect(url_for('.index'))
 
-@main.route('/post/like/<int:id>')
+@main.route('/post/like/<int:id>/<redir>')
 @login_required
-def post_like(id):
+def post_like(id, redir):
     post = Post.query.get_or_404(id)
+    page = request.args.get('page', 1, type = int)
     if current_user.is_like_post(post):
         like = Like.query.filter_by(post_id = post.id).first()
         db.session.delete(like)
@@ -156,7 +157,15 @@ def post_like(id):
         like = Like(post = post, author = current_user._get_current_object())
         db.session.add(like)
     db.session.commit()
-    return redirect(url_for('.index'))
+    redir_frament = ''.join(('post', str(post.id)))
+    if redir == '.index':
+        return redirect(url_for('.index', page = page, _anchor=redir_frament))
+    elif redir == '.post':
+        return redirect(url_for('.post', id = post.id))
+    elif redir == '.category':
+        return redirect(url_for('.category', page = page, id = post.category.id, _anchor=redir_frament))
+    elif redir == '.user':
+        return redirect(url_for('.user', username = current_user._get_current_object().username, _anchor=redir_frament))
 
 @main.route('/edit/<int:id>', methods = ['GET', 'POST'])
 @login_required

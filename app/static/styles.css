@@ -41,6 +41,10 @@ div.post-category {
     float: left;
     margin-right: 6px;
 }
+div.post-like {
+    float: left;
+    margin-right: 6px;
+}
 div.post-statistics {
     font-style: italic;
     float: left;
@@ -52,6 +56,7 @@ div.post-edit {
 }
 div.post-delete {
     float: left;
+    margin-right: 6px;
 }
 div.post-thumbnail {
     position: absolute;

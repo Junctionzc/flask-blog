@@ -4,14 +4,18 @@
 {% block title %}讲一个故事 - 管理评论{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>管理评论</h1>
+<div class="row">
+    <div class="col-md-9 col-sm-9">
+        <div class="page-header">
+            <h1>管理评论</h1>
+        </div>
+        {% set moderate = True %}
+        {% include '_comments.html' %}
+        {% if pagination %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.moderate') }}
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% set moderate = True %}
-{% include '_comments.html' %}
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.moderate') }}
-</div>
-{% endif %}
 {% endblock %}

@@ -17,6 +17,19 @@
                 {{ post.category.category }}
             </a>
         </div>
+        <div class="post-like">
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_like_post(post) %}
+                    <a href="{{ url_for('.post_like', id=post.id, redir=redir) }}">
+                        <span">取消赞</span>
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('.post_like', id=post.id, redir=redir) }}">
+                        <span">点赞</span>
+                    </a>
+                {% endif%}
+            {% endif %}  
+        </div>      
         {% if current_user == post.author %}
             <div class="post-edit">
                 <a href="{{ url_for('.edit', id=post.id) }}">
@@ -42,6 +55,7 @@
             </div>
             {% include '_post_delete_tips.html' %}
         {% endif %}
+        <div class="post-statistics">- 赞 {{ post.likes.count() }}</div>
         <div class="post-body">
             {% if post.body_html %}
                 {{ post.body_html | safe }}

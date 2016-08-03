@@ -1,6 +1,6 @@
 <ul class="posts">
     {% for post in posts %}
-    <li class="post">
+    <li id="post{{ post.id }}" class="post">
         <div class="post-thumbnail">
             <a href="{{ url_for('.user', username=post.author.username) }}">
                 <img class="img-rounded profile-thumbnail" src="{{ post.author.gravatar(size=60) }}">
@@ -43,11 +43,11 @@
                 </a>
                 {% if current_user.is_authenticated %}
                     {% if current_user.is_like_post(post) %}
-                        <a href="{{ url_for('.post_like', id=post.id) }}">
+                        <a href="{{ url_for('.post_like', id=post.id, redir=redir, page=page) }}">
                             <span class="label label-primary">取消赞</span>
                         </a>
                     {% else %}
-                        <a href="{{ url_for('.post_like', id=post.id) }}">
+                        <a href="{{ url_for('.post_like', id=post.id, redir=redir, page=page) }}">
                             <span class="label label-primary">点赞</span>
                         </a>
                     {% endif%}
