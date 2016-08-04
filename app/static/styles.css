@@ -181,6 +181,12 @@ textarea:-ms-input-placeholder {
 .post-body h3 {
     font-size: 120%;
 }
+.post-body>p>img {
+    width: 100%;
+}
+.flask-pagedown-preview>p>img {
+    width: 100%;
+}
 .table.followers tr {
     border-bottom: 1px solid #e0e0e0;
 }
@@ -284,4 +290,7 @@ textarea:-ms-input-placeholder {
 .bootstrap-dialog, .modal-header {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+}
+.post-picture {
+    width: 60px;
 }
