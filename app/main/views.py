@@ -1,6 +1,6 @@
 #! -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, url_for, abort, flash, \
-    current_app, make_response
+    current_app, make_response, send_from_directory
 from flask.ext.login import login_required, current_user
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
@@ -8,6 +8,14 @@ from ..models import Role, User, Permission, Post, Comment, Category, Like
 from ..import db
 from ..decorators import permission_required, admin_required
 from flask.ext.sqlalchemy import get_debug_queries
+from werkzeug import secure_filename
+import os, time
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @main.route('/', methods = ['GET', 'POST'])
 def index():
@@ -74,15 +82,36 @@ def edit_profile():
 @login_required
 def new_article():
     form = PostForm()
+
     if current_user.can(Permission.WRITE_ARTICLES) and \
         form.validate_on_submit():
-        post = Post(title = form.title.data, category = Category.query.get(form.category.data), 
-                    body = form.body.data, author = current_user._get_current_object())
-        db.session.add(post)
-        db.session.commit()
-        flash(u'文章已发布')
-        return redirect(url_for('.post', id = post.id))
+        file = request.files['file']
+
+        if file:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                
+                if filename.find('.') == -1:
+                    filename = '.{}'.format(filename)
+
+                filename = '{}{}'.format(str(int(time.time())), filename)
+                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                form.body.data = form.body.data + '![]({}uploads/{})'.format(request.url_root, filename)
+
+            return render_template('new_article.html', form = form)
+        else:
+            post = Post(title = form.title.data, category = Category.query.get(form.category.data), 
+                        body = form.body.data, author = current_user._get_current_object())
+            db.session.add(post)
+            db.session.commit()
+            flash(u'文章已发布')
+            return redirect(url_for('.post', id = post.id))
+
     return render_template('new_article.html', form = form)
+
+@main.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
 @main.route('/edit-profile/<int:id>', methods = ['GET', 'POST'])
 @login_required
@@ -171,18 +200,37 @@ def post_like(id, redir):
 @login_required
 def edit(id):
     post = Post.query.get_or_404(id)
+
     if current_user != post.author and \
         not current_user.can(Permission.ADMINISTER):
         about(403)
+
     form = PostForm()
+
     if form.validate_on_submit():
-        post.title = form.title.data
-        post.category = Category.query.get(form.category.data)
-        post.body = form.body.data
-        db.session.add(post)
-        db.session.commit()
-        flash(u'文章已更新')
-        return redirect(url_for('.post', id = post.id))
+        file = request.files['file']
+
+        if file:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                
+                if filename.find('.') == -1:
+                    filename = '.{}'.format(filename)
+
+                filename = '{}{}'.format(str(int(time.time())), filename)
+                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                form.body.data = form.body.data + '![]({}uploads/{})'.format(request.url_root, filename)
+
+            return render_template('edit_post.html', form = form)
+        else:
+            post.title = form.title.data
+            post.category = Category.query.get(form.category.data)
+            post.body = form.body.data
+            db.session.add(post)
+            db.session.commit()
+            flash(u'文章已更新')
+            return redirect(url_for('.post', id = post.id))
+
     form.title.data = post.title
     form.category.data = post.category_id
     form.body.data = post.body

@@ -25,6 +25,7 @@ class DevelopmentConfig(Config):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL')
+    UPLOAD_FOLDER = '{}/uploads'.format(basedir)
         
 class TestingConfig(Config):
     TESTING = True

@@ -1,5 +1,5 @@
 <div>
-    <form action="" method="post" class="form" role="form">
+    <form action="" method="post" class="form" role="form" enctype=multipart/form-data>
         <div style="display:none;">
             {{ form.csrf_token() }}
         </div>
@@ -13,6 +13,10 @@
             <div class="row">
                 <div class="col-md-6">
                     {{ form.body(only_input=True, class="input-markdown", placeholder=form.body.label.text, required=True) }}
+                    <a href=""  data-toggle="modal" data-target="#post-upload-file-modal">
+                        <span>上传图片</span>
+                    </a>
+                    {% include '_post_upload_file.html' %}
                 </div>
                 <div class="col-md-6 hidden-sm hidden-xs">
                     {{ form.body(only_preview=True) }}
